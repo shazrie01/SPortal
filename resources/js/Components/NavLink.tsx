@@ -1,0 +1,1 @@
+export default function NavLink({children}: any) { return <a>{children}</a>; }

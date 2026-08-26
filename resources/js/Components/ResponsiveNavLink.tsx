@@ -1,0 +1,1 @@
+export default function ResponsiveNavLink({children}: any) { return <a>{children}</a>; }
