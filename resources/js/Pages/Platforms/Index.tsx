@@ -6,7 +6,7 @@ import { Label } from "@/Components/ui/label";
 import { PlatformData } from "../Dashboard";
 import { ArrowLeft, Edit2, Trash2, Plus } from "lucide-react";
 import NewsAdminLayout from '@/Layouts/NewsAdminLayout';
-
+import { ShareBar } from "@/Components/ShareBar";
 export default function Index({ platforms }: { platforms: PlatformData[] }) {
     const [editingId, setEditingId] = useState<number | null>(null);
     const { data, setData, post, put, delete: destroy, reset } = useForm({
@@ -104,13 +104,25 @@ export default function Index({ platforms }: { platforms: PlatformData[] }) {
                         <div className="space-y-1.5">
                             <Label className="text-xs font-semibold text-gray-600 uppercase tracking-wider">Brand Color</Label>
                             <div className="flex gap-2">
-                                <Input type="color" className="w-12 p-1 h-10 border-gray-300 rounded-md" required value={data.color} onChange={e => setData('color', e.target.value)} />
-                                <Input required value={data.color} onChange={e => setData('color', e.target.value)} placeholder="#0A66C2" className="h-10 bg-gray-50 border-gray-300 rounded-md" />
+                                <Input type="color" className="w-12 p-1 h-10 border-gray-300 rounded-md" required value={data.color} onChange={e => { setData('color', e.target.value); setFormErrors(prev => ({...prev, color: ''})); }} />
+                                <Input required maxLength={7} pattern="^#[0-9A-Fa-f]{6}$" value={data.color} onChange={e => { setData('color', e.target.value); setFormErrors(prev => ({...prev, color: ''})); }} placeholder="#0A66C2" className={`h-10 bg-gray-50 rounded-md w-full ${formErrors.color ? "border-red-400" : "border-gray-300"}`} />
                             </div>
+                            {formErrors.color && <p className="text-xs text-[#E4002B] mt-1">{formErrors.color}</p>}
                         </div>
                         <div className="space-y-1.5">
-                            <Label className="text-xs font-semibold text-gray-600 uppercase tracking-wider">Icon</Label>
-                            <Input value={data.icon} onChange={e => setData('icon', e.target.value)} placeholder="e.g. linkedin" className="h-10 bg-gray-50 border-gray-300 rounded-md" />
+                            <Label className="text-xs font-semibold text-gray-600 uppercase tracking-wider">Icon (SVG or Name)</Label>
+                            <textarea 
+                                value={data.icon} 
+                                onChange={e => setData('icon', e.target.value)} 
+                                placeholder="Paste SVG code or enter icon name" 
+                                className="flex min-h-[80px] w-full rounded-md border border-gray-300 bg-gray-50 px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-gray-300 focus:border-gray-400" 
+                            />
+                            <div className="mt-2 p-4 bg-gray-50 border border-gray-200 rounded-md flex flex-col items-center justify-center gap-3">
+                                <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Button Preview</span>
+                                <div className="pointer-events-none">
+                                    <ShareBar title="Preview" platforms={[data as PlatformData]} />
+                                </div>
+                            </div>
                         </div>
                         <div className="space-y-1.5">
                             <Label className="text-xs font-semibold text-gray-600 uppercase tracking-wider">URL Template</Label>

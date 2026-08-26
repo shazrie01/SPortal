@@ -83,7 +83,9 @@ export function ShareBar({ title, platforms = [] }: { title: string, platforms: 
   return (
     <div className="flex flex-wrap gap-2">
       {platforms.map((platform) => {
-        const Icon = iconFor[platform.icon || ''] ?? Share2;
+        const isSvg = platform.icon && platform.icon.includes('<svg');
+        const Icon = isSvg ? null : (iconFor[platform.icon || ''] ?? Share2);
+        
         return (
           <button
             key={platform.key}
@@ -94,7 +96,14 @@ export function ShareBar({ title, platforms = [] }: { title: string, platforms: 
             className="flex size-7 sm:size-8 items-center justify-center rounded-full text-white transition-opacity hover:opacity-80 disabled:opacity-50"
             style={{ backgroundColor: platform.color }}
           >
-            <Icon className="size-3.5 sm:size-4" />
+            {isSvg ? (
+              <span 
+                className="size-3.5 sm:size-4 flex items-center justify-center [&>svg]:size-full" 
+                dangerouslySetInnerHTML={{ __html: platform.icon as string }} 
+              />
+            ) : (
+              Icon && <Icon className="size-3.5 sm:size-4" />
+            )}
           </button>
         );
       })}

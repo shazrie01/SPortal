@@ -19,7 +19,7 @@ class SharePlatformController extends Controller
         $validated = $request->validate([
             'key' => 'required|string|unique:share_platforms,key',
             'label' => 'required|string',
-            'color' => 'required|string',
+            'color' => ['required', 'string', 'regex:/^#[0-9A-Fa-f]{6}$/'],
             'icon' => 'nullable|string',
             'url_template' => 'required|string',
             'is_active' => 'boolean',
@@ -35,7 +35,7 @@ class SharePlatformController extends Controller
         $validated = $request->validate([
             'key' => 'required|string|unique:share_platforms,key,'.$platform->id,
             'label' => 'required|string',
-            'color' => 'required|string',
+            'color' => ['required', 'string', 'regex:/^#[0-9A-Fa-f]{6}$/'],
             'icon' => 'nullable|string',
             'url_template' => 'required|string',
             'is_active' => 'boolean',
